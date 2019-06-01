@@ -11,20 +11,29 @@ def parse_commit_text(t):
     return re.findall(r'(\d+) commits? ([a-n]+)', t)
 
 
-class GitHubItem(scrapy.Item):
+class GitHubRepo(scrapy.Item):
     user = scrapy.Field()
-    repo = scrapy.Field()
-    branch = scrapy.Field()
+    name = scrapy.Field()
+
+    watchers = scrapy.Field()
+    stars = scrapy.Field()
+    forks = scrapy.Field()
+
     commits = scrapy.Field()
-    update_date = scrapy.Field()
+    branches = scrapy.Field()
+    releases = scrapy.Field()
+    contributors = scrapy.Field()
+    license = scrapy.Field()
 
-    def __repr__(self):
-        return str(dict(self))
+    branch = scrapy.Field()
+    fork_commits = scrapy.Field()
+    last_updated = scrapy.Field()
 
 
-class GitHubItemLoader(ItemLoader):
-    default_item_class = GitHubItem
-    default_output_processor = TakeFirst()
+class GitHubRepoLoader(ItemLoader):
+    default_item_class = GitHubRepo
+    default_input_processor = MapCompose(strip_html5_whitespace)
+    default_output_processor = Compose(TakeFirst())
 
-    commits_in = MapCompose(strip_html5_whitespace)
-    commits_out = Compose(Join(), parse_commit_text)
+    fork_commits_in = MapCompose(strip_html5_whitespace)
+    fork_commits_out = Compose(Join(), parse_commit_text)

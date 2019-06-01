@@ -15,5 +15,5 @@ EXTENSIONS = {
     'scrapy.extensions.telnet.TelnetConsole': None,
 }
 
-FEED_URI = 'fork.json'
+FEED_URI = 'results.json'
 LOG_LEVEL = 'INFO'
