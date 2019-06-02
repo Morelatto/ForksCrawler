@@ -1,3 +1,4 @@
+import json
 import scrapy
 
 from github.items import GitHubRepoLoader
@@ -21,9 +22,9 @@ class GitHubRepoSpider(scrapy.Spider):
     name = 'repo'
     allowed_domains = [GITHUB]
 
-    def __init__(self, user_repos, *args, **kwargs):
+    def __init__(self, repos, *args, **kwargs):
         super(GitHubRepoSpider, self).__init__(*args, **kwargs)
-        self.start_urls = ['https://' + GITHUB + user_repo for user_repo in user_repos.split(';')]
+        self.start_urls = list(set(['https://{}/{}/{}'.format(GITHUB, repo[0], repo[1]) for repo in json.loads(repos)]))
 
     def parse(self, response):
         loader = GitHubRepoLoader(response=response)
